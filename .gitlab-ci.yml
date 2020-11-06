@@ -1,0 +1,71 @@
+image: openjdk:14-alpine
+
+stages:
+  - test
+  - build
+  - register
+
+variables:
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  JAVA_TOOL_OPTIONS: -Xmx300m
+
+before_script:
+  - chmod +x mvnw
+
+test-junit:
+  stage: test
+  cache:
+    paths:
+      - .m2/repository
+  script:
+    - ./mvnw test
+  only:
+    - /^feature\/[a-zA-Z0-9]{5,}[a-zA-Z0-9_-]*$/
+
+dependency-check:
+  stage: test
+  only:
+    - merge_requests
+  cache:
+    paths:
+      - .m2/repository
+  script:
+    - ./mvnw verify
+
+build:
+  stage: build
+  only:
+    - merge_requests
+    - main
+  cache:
+    paths:
+      - target
+      - .m2/repository
+  script:
+    - ./mvnw compile package
+
+artefact-jar:
+  stage: register
+  only:
+    - merge_requests
+  cache:
+    paths:
+      - target
+    policy: pull
+  artifacts:
+    paths:
+      - target/*.jar
+  script:
+    - echo "generated jar artefact"
+
+deploy:
+  stage: register
+  only:
+    - main
+  cache:
+    paths:
+      - target
+      - .m2/repository
+  script:
+    - ./mvnw deploy -s ci_settings.xml
