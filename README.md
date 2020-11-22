@@ -90,3 +90,44 @@ Podemos considerar que ele representa o *core* de toda API.
 2. Não possui um tipo eficiente de estrutura de encadeamento de condicionais distintas (leia-se else if … ).
 3. Como a quantidade de implementação de classes aumenta proporcionalmente a quantidade de processos, a API não aumenta coesão e diminui acoplamento.
 4. Por mais que a API tenha mecanismos de abstração que evite falhas de processo, excessões como *NullPointerException* não são resolvidas.
+
+## Como utilizar
+
+Insira a dependência em um arquivo pom.xml
+
+```xml
+<dependency>
+  <groupId>br.project.knin</groupId>
+  <artifactId>activity</artifactId>
+  <version>1.0.1</version>
+</dependency>
+```
+
+Adicione a configuração de repositório
+
+```xml
+<repositories>
+  <repository>
+    <id>gitlab-maven</id>
+    <url>https://gitlab.com/api/v4/projects/22283467/packages/maven</url>
+  </repository>
+</repositories>
+
+<distributionManagement>
+  <repository>
+    <id>gitlab-maven</id>
+    <url>https://gitlab.com/api/v4/projects/22283467/packages/maven</url>
+  </repository>
+
+  <snapshotRepository>
+    <id>gitlab-maven</id>
+    <url>https://gitlab.com/api/v4/projects/22283467/packages/maven</url>
+  </snapshotRepository>
+</distributionManagement>
+```
+
+Obtenha a dependência 
+
+```shell script
+mvn dependency:get -Dartifact=br.project.knin:activity:1.0.1
+```
