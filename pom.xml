@@ -6,10 +6,10 @@
 
     <groupId>br.project.knin</groupId>
     <artifactId>activity</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
 
     <properties>
-        <java.version>14</java.version>
+        <java.version>11</java.version>
         <junit.version>5.7.0</junit.version>
         <maven.version>3.8.1</maven.version>
         <maven.surefire.plugin>3.0.0-M5</maven.surefire.plugin>

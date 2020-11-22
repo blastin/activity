@@ -3,7 +3,9 @@ package br.project.knin.activity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class ActivityProxyTest {
 
@@ -21,12 +23,12 @@ public class ActivityProxyTest {
 
     @Test
     void testAction() {
-        Assertions.assertThrows(NullPointerException.class, () -> ACTIVITY_PROXY.action((FunctionZ<? super String, ? super String, ?>) null));
+        Assertions.assertThrows(NullPointerException.class, () -> ACTIVITY_PROXY.action((BiFunction<? super String, ? super String, ?>) null));
     }
 
     @Test
     void otherwise() {
-        Assertions.assertThrows(NullPointerException.class, () -> ACTIVITY_PROXY.otherwise((Produce<? extends Integer>) null));
+        Assertions.assertThrows(NullPointerException.class, () -> ACTIVITY_PROXY.otherwise((Supplier<? extends Integer>) null));
     }
 
     @Test
@@ -53,7 +55,6 @@ public class ActivityProxyTest {
     void otherwiseChannelWithFunctionNull() {
         Assertions.assertThrows(NullPointerException.class, () -> ACTIVITY_PROXY.otherwiseChannel(null, null));
     }
-
 
     @Test
     void otherwiseChannelWithoutFunctionNull() {

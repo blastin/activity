@@ -1,4 +1,4 @@
-image: openjdk:14-alpine
+image: lisboajeff/openjdk11-jdk-root:alpine
 
 stages:
   - test

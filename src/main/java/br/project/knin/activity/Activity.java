@@ -1,8 +1,10 @@
 package br.project.knin.activity;
 
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * Activity is an API model based on the UML activity diagram concepts to facilitate the development of use case actions
@@ -83,7 +85,7 @@ public interface Activity<C, E, V> {
      * @return caso novo valor encapsulado não seja nulo, retornará uma nova atividade, caso contrário uma atividade
      * que represente o estado de fim de uma ação.
      */
-    <W> Activity<C, E, W> action(final FunctionZ<? super E, ? super V, ? extends W> function);
+    <W> Activity<C, E, W> action(final BiFunction<? super E, ? super V, ? extends W> function);
 
     /**
      * Otherwise opera uma função que produz uma saída para um fluxo de atividade alternativo. Após ser especificado
@@ -93,7 +95,7 @@ public interface Activity<C, E, V> {
      * @return caso novo objeto de contrato não seja nulo, retornará uma nova atividade com objeto de fim de contrato
      * alterado, caso contrário, a mesma atividade.
      */
-    Activity<C, E, V> otherwise(final Produce<? extends C> produce);
+    Activity<C, E, V> otherwise(final Supplier<? extends C> produce);
 
     /**
      * Otherwise opera uma função que produz uma saída para um fluxo de atividade alternativo. Após ser especificado
@@ -122,7 +124,7 @@ public interface Activity<C, E, V> {
      * @param <W>      E,V -> W é um mapeamento que transforma entrada e valor em W
      * @return mesma instância de atividade
      */
-    <W> Activity<C, E, V> channel(final FunctionZ<? super E, ? super V, ? extends W> function, Channel<? super W> channel);
+    <W> Activity<C, E, V> channel(final BiFunction<? super E, ? super V, ? extends W> function, Channel<? super W> channel);
 
     /**
      * otherwise channel é uma operação necessária para encaminhar uma mensagem a um canal quando valor encapsulado é nulo,
