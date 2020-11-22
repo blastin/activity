@@ -1,8 +1,10 @@
 package br.project.knin.activity;
 
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 final class ActivityImpl<C, E, V> implements Activity<C, E, V> {
 
@@ -38,15 +40,15 @@ final class ActivityImpl<C, E, V> implements Activity<C, E, V> {
         }
 
         @Override
-        public <W> Activity<C, E, W> action(final FunctionZ<? super E, ? super V, ? extends W> function) {
+        public <W> Activity<C, E, W> action(final BiFunction<? super E, ? super V, ? extends W> function) {
             Objects.requireNonNull(function, "FunçãoZ em 'ação' não deve ser nula");
             return activity.action(function);
         }
 
         @Override
-        public Activity<C, E, V> otherwise(final Produce<? extends C> produce) {
-            Objects.requireNonNull(produce, "Produção em 'otherwise' não deve ser nula");
-            return activity.otherwise(produce);
+        public Activity<C, E, V> otherwise(final Supplier<? extends C> supplier) {
+            Objects.requireNonNull(supplier, "Produção em 'otherwise' não deve ser nula");
+            return activity.otherwise(supplier);
         }
 
         @Override
@@ -62,7 +64,7 @@ final class ActivityImpl<C, E, V> implements Activity<C, E, V> {
         }
 
         @Override
-        public <W> Activity<C, E, V> channel(final FunctionZ<? super E, ? super V, ? extends W> function, final Channel<? super W> channel) {
+        public <W> Activity<C, E, V> channel(final BiFunction<? super E, ? super V, ? extends W> function, final Channel<? super W> channel) {
             Objects.requireNonNull(function, "Função em 'channel' não deve ser nula");
             Objects.requireNonNull(channel, "Canal em 'channel' não deve ser nula");
             return activity.channel(function, channel);
@@ -158,7 +160,7 @@ final class ActivityImpl<C, E, V> implements Activity<C, E, V> {
     }
 
     @Override
-    public <W> Activity<C, E, W> action(final FunctionZ<? super E, ? super V, ? extends W> function) {
+    public <W> Activity<C, E, W> action(final BiFunction<? super E, ? super V, ? extends W> function) {
 
         if (value == null) return exitActivity(contract);
 
@@ -169,11 +171,11 @@ final class ActivityImpl<C, E, V> implements Activity<C, E, V> {
     }
 
     @Override
-    public Activity<C, E, V> otherwise(final Produce<? extends C> produce) {
+    public Activity<C, E, V> otherwise(final Supplier<? extends C> supplier) {
 
         if (isOver || value != null) return this;
 
-        final C c = produce.get();
+        final C c = supplier.get();
 
         if (c == null) return this;
 
@@ -206,7 +208,7 @@ final class ActivityImpl<C, E, V> implements Activity<C, E, V> {
     }
 
     @Override
-    public <W> Activity<C, E, V> channel(final FunctionZ<? super E, ? super V, ? extends W> function, final Channel<? super W> channel) {
+    public <W> Activity<C, E, V> channel(final BiFunction<? super E, ? super V, ? extends W> function, final Channel<? super W> channel) {
 
         if (value == null) return exitActivityForFail;
 

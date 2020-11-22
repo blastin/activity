@@ -14,9 +14,7 @@ class ActivityImplTest {
 
     @Test
     void shouldThrowNullPointerExceptionBecauseContractIsNull() {
-
         Assertions.assertThrows(NullPointerException.class, () -> Activity.contract(null));
-
     }
 
     @Test
@@ -29,16 +27,17 @@ class ActivityImplTest {
     @Test
     void shouldReturnInitialContractBecausePredicateIsFalse() {
 
-        final int contractValue = 0;
+        final long contractValue = -1000L;
 
         Assertions
                 .assertEquals
-                        (0,
+                        (
+                                contractValue,
                                 Activity
                                         .contract(contractValue)
                                         .entry(10)
                                         .decision(integer -> integer < 10)
-                                        .exit(integer -> integer)
+                                        .exit(Long::valueOf)
                         );
 
     }
@@ -52,6 +51,7 @@ class ActivityImplTest {
                 .contract(initialContract)
                 .entry(1)
                 .action(integer -> null)
+                .action(o -> "")
                 .exit(String::valueOf);
 
         Assertions.assertEquals(initialContract, contract);
@@ -521,4 +521,24 @@ class ActivityImplTest {
 
     }
 
+    @Test
+    @DisplayName("When otherwise function was called before a action")
+    void whenOtherwiseFunctionWasCalledBeforeAction() {
+
+        Assertions.assertTrue
+                (
+                        Activity
+                                .contract(false)
+                                .entry(1)
+                                .otherwise
+                                        (
+                                                integer -> {
+                                                    throw new IllegalCallerException("");
+                                                }
+                                        )
+                                .action(integer -> integer * 20)
+                                .exit(integer -> integer > 2)
+                );
+
+    }
 }
